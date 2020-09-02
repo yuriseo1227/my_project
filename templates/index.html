@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Webpage Title -->
+    <title>나와 어울리는 영화주인공</title>
+
+    <meta property="og:title" content="나와 어울리는 영화주인공 찾기"/>
+    <meta property="og:description" content="내 연애성향과 맞는 로맨스영화 속 주인공을 찾아보세요!"/>
+    <meta property="og:image" content="{{ url_for('static', filename='thumbnail.png') }}"/>
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- favicon -->
+    <link rel="favicon" href="../static/favicon.ico">
+    <link rel="shortcut icon" href="../static/favicon.ico">
+    <link rel="icon" href="../static/favicon.ico">
+
+
+    <style type="text/css">
+
+
+        @font-face {
+            font-family: 'DXMSubtitlesM-KSCpc-EUC-H';
+            src: url(../static/DXMSubtitlesM-KSCpc-EUC-H.eot);
+            src: url(../static/DXMSubtitlesM-KSCpc-EUC-H.eot?#iefix) format('embedded-opentype'),
+            url(../static/DXMSubtitlesM-KSCpc-EUC-H.woff2) format('woff2'),
+            url(../static/DXMSubtitlesM-KSCpc-EUC-H.woff) format('woff'),
+            url(../static/DXMSubtitlesM-KSCpc-EUC-H.ttf) format('truetype');
+        }
+
+
+        .wrap {
+            font-family: 'DXMSubtitlesM-KSCpc-EUC-H', serif;
+            width: 1000px;
+            margin: auto;
+        }
+
+
+        h1, h5 {
+            display: inline;
+        }
+
+
+        .card {
+            display: none;
+            width: 500px;
+        }
+
+        .card .input-group p button {
+            width: 458px;
+        }
+
+
+        .title {
+            font-family: 'DXMSubtitlesM-KSCpc-EUC-H', sans-serif;
+            font-weight: bolder;
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background-position: center;
+            background-size: cover;
+            border-radius: 10px;
+            text-align: center;
+            padding-top: 150px;
+            background-image: url(../static/background_image.jpg);
+        )
+        }
+
+
+        .title .inner_box {
+            width: 450px;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px;
+            text-align: center;
+        }
+
+        .title .inner_box h2 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: normal;
+            color: #777;
+        }
+
+        .title .inner_box button {
+            color: #fff;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            padding: 10px 30px;
+        }
+
+        .card-custom {
+            top: 20px;
+            overflow: hidden;
+            min-height: 450px;
+            box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+        }
+
+        .card-custom-img {
+            height: 200px;
+            min-height: 200px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border-color: inherit;
+        }
+
+        /* First border-left-width setting is a fallback */
+        .card-custom-img::after {
+            position: absolute;
+            content: '';
+            top: 161px;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-top-width: 40px;
+            border-right-width: 0;
+            border-bottom-width: 0;
+            border-left-width: 545px;
+            border-left-width: calc(575px - 5vw);
+            border-top-color: transparent;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: inherit;
+        }
+
+
+        .card-custom-avatar img {
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+            position: absolute;
+            top: 100px;
+            left: 1.25rem;
+            width: 100px;
+            height: 100px;
+        }
+
+    </style>
+    <script>
+        let score = [0, 0, 0, 0];
+
+        /*$(document).ready(function () {
+            $("#q1 button").click(q1);
+            $("#q2 button").click(q2);
+            $("#q3 button").click(q3);
+            $("#q4 button").click(q4);
+            $("#q5 button").click(q5);
+            $("#q6 button").click(q6);
+            $("#q7 button").click(q7);
+            $("#q8 button").click(q8);
+        });*/
+
+        function start() {
+            $('.title').hide();
+            $('#q1').show();
+        }
+
+
+        function back() {
+            window.location.reload();
+        }
+
+
+        function q1(answer) {
+            score[answer]++;
+            $('#q1').hide();
+            $('#q2').show();
+        }
+
+        function q2(answer) {
+            score[answer]++;
+            $('#q2').hide();
+            $('#q3').show();
+        }
+
+        function q3(answer) {
+            score[answer]++;
+            $('#q3').hide();
+            $('#q4').show();
+        }
+
+        function q4(answer) {
+            score[answer]++;
+            $('#q4').hide();
+            $('#q5').show();
+        }
+
+        function q5(answer) {
+            score[answer]++;
+            $('#q5').hide();
+            $('#q6').show();
+        }
+
+        function q6(answer) {
+            score[answer]++;
+            $('#q6').hide();
+            $('#q7').show();
+        }
+
+        function q7(answer) {
+            score[answer]++;
+            $('#q7').hide();
+            $('#q8').show();
+        }
+
+        function q8(answer) {
+            score[answer]++;
+            $('#q8').hide();
+            $('#q9').show();
+        }
+
+
+        function q9(answer) {
+            score[answer]++;
+            $('#q9').hide();
+
+            if (score[0] > score[1] && score[0] > score[2] && score[0] > score[3]) {
+                $('#r0').show();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            } else if (score[1] > score[0] && score[1] > score[2] && score[1] > score[3]) {
+                $('#r0').hide();
+                $('#r1').show();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            } else if (score[2] > score[0] && score[2] > score[1] && score[2] > score[3]) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').show();
+                $('#r3').hide();
+
+
+            } else if (score[2] > score[0] && score[2] > score[1] && score[2] > score[3]) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').show();
+                $('#r3').hide();
+
+
+            } else if (score[3] > score[0] && score[3] > score[1] && score[3] > score[2]) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').show();
+
+
+            } else if (score[0] == 0) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').show();
+
+
+            } else if (score[1] == 0) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').show();
+                $('#r3').hide();
+
+
+            } else if (score[2] == 0) {
+                $('#r0').hide();
+                $('#r1').show();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            } else if (score[3] == 0) {
+                $('#r0').show();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            } else if (score[0] == 1) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').show();
+
+
+            } else if (score[1] == 1) {
+                $('#r0').hide();
+                $('#r1').hide();
+                $('#r2').show();
+                $('#r3').hide();
+
+
+            } else if (score[2] == 1) {
+                $('#r0').hide();
+                $('#r1').show();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            } else if (score[3] == 1) {
+                $('#r0').show();
+                $('#r1').hide();
+                $('#r2').hide();
+                $('#r3').hide();
+
+
+            }
+
+
+        }
+
+    </script>
+</head>
+
+<body>
+
+<div class="wrap">
+    <div id="tt" class="title">
+        <div class="inner_box">
+            <h1 class="display-4">나와 어울리는<br> 영화 주인공은?</h1>
+            <p class="lead">내 연애성향과 맞는<br> 로맨스영화 속 주인공을 찾아보세요!<br></p><br>
+            <h11 class>※질문은 영화 속 설정과 대사를 기반으로 만들었습니다.<br> 가상의 애인이 있다고 가정하고 답변해주세요.</h11>
+            <br>
+            <br>
+            <button onclick="start()" id="btn-post-box" type="button" class="btn btn-info">테스트 시작
+            </button>
+        </div>
+    </div>
+    <div id="post-box" class="form-post">
+        <div>
+            <div id="q1" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 11%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q1.</h4></p>
+                    <p class="card-text">당신이 애인을 처음 알게 된 계기는?</p>
+                    <div id="a1" class="input-group mb-3">
+                        <p>
+                            <button onclick="q1(0)" type="button" class="btn btn-outline-dark">내 친구와
+                                함께 있던 그(그녀)에게 첫눈에 반했다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q1(1)" type="button" class="btn btn-outline-dark">맛집에 갔다가
+                                우연히 합석하게 되었다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q1(2)" type="button" class="btn btn-outline-dark">연말 홈파티에서 소개받았다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q1(3)" type="button" class="btn btn-outline-dark">홀로 탄 기차에서
+                                그(그녀)가 말을 걸었다.
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q2" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 22%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q2.</h4></p>
+                    <p class="card-text">특별한 날, 애인이 당신을 위해 준비한 선물을?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q2(0)" type="button" class="btn btn-outline-dark">무심코 갖고 싶다고
+                                말한 취미생활용품
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q2(1)" type="button" class="btn btn-outline-dark">평소에 필요했던
+                                생활용품
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q2(2)" type="button" class="btn btn-outline-dark">내 월급으로는 살 수 없는 명품
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q2(3)" type="button" class="btn btn-outline-dark">직접 만든,
+                                하나뿐인 예술 작품
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q3" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 33%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q3.</h4></p>
+                    <p class="card-text">가장 마음에 와닿았던 애인의 말은?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q3(0)" class="btn btn-outline-dark">평생 당신만 사랑한다면, 내 인생은 성공한 인생이에요.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q3(1)" class="btn btn-outline-dark">당신의 눈이 좋아요. 얼굴 말고 다른 것도 모두 다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q3(2)" class="btn btn-outline-dark">당신의 과거, 현재, 미래까지도 다 사랑해요.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q3(3)" class="btn btn-outline-dark">난 당신이 없던 곳은 기억이 안 나네요.</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q4" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 44%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q4.</h4></p>
+                    <p class="card-text">애인이 자주 가는 곳으로 그(그녀)를 픽업하러 간다. 장소는?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q4(0)" class="btn btn-outline-dark">목공소 앞</button>
+                        </p>
+                        <p>
+                            <button onclick="q4(1)" class="btn btn-outline-dark">출판사 앞</button>
+                        </p>
+                        <p>
+                            <button onclick="q4(2)" class="btn btn-outline-dark">로펌 사무실 앞</button>
+                        </p>
+                        <p>
+                            <button onclick="q4(3)" class="btn btn-outline-dark">서점 앞</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q5" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 55%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q5.</h4></p>
+                    <p class="card-text">주말 데이트! 무엇을 하고 놀까?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q5(0)" class="btn btn-outline-dark">놀이공원 가기</button>
+                        </p>
+                        <p>
+                            <button onclick="q5(1)" class="btn btn-outline-dark">연극 보러 가기</button>
+                        </p>
+                        <p>
+                            <button onclick="q5(2)" class="btn btn-outline-dark">집에서 데이트</button>
+                        </p>
+                        <p>
+                            <button onclick="q5(3)" class="btn btn-outline-dark">아이스 스케이트 타기</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q6" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 66%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q6.</h4></p>
+                    <p class="card-text">애인의 가장 큰 단점은?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q6(0)" class="btn btn-outline-dark">한 가지에 집요하게 파고들면 주위에 신경을 못쓴다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q6(1)" class="btn btn-outline-dark">자신감이 부족해서 주변의 의견에 휘둘린다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q6(2)" class="btn btn-outline-dark">속마음과 다르게 말투가 약간 무뚝뚝하다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q6(3)" class="btn btn-outline-dark">가끔 엉뚱한 장난을 해서 당황스럽게 한다.</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="q7" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 77%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q7.</h4></p>
+                    <p class="card-text">내가 빠지게 된 애인의 매력은?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q7(0)" class="btn btn-outline-dark">한결같이 나에게 헌신적인 모습</button>
+                        </p>
+                        <p>
+                            <button onclick="q7(1)" class="btn btn-outline-dark">아이처럼 사랑스러운 행동</button>
+                        </p>
+                        <p>
+                            <button onclick="q7(2)" class="btn btn-outline-dark">똑똑하고 생활력 있는 모습</button>
+                        </p>
+                        <p>
+                            <button onclick="q7(3)" class="btn btn-outline-dark">같이 있으면 즐거운 유머감각</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q8" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 88%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q8.</h4></p>
+                    <p class="card-text">애인이 화가 났다. 이유는 무엇일까?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q8(0)" class="btn btn-outline-dark">내가 애인의 카톡을 읽씹했다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q8(1)" class="btn btn-outline-dark">애인이 피곤해하는데 데이트 일정을 무리하게 짰다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q8(2)" class="btn btn-outline-dark">내가 다른 이성과 함께 있는데 애인이 그만 오해해버렸다.
+                            </button>
+                        </p>
+                        <p>
+                            <button onclick="q8(3)" class="btn btn-outline-dark">애인과 대화를 하고 있는데 내가 집중을 못 했다.
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div id="q9" class="card">
+                <div class="card-body">
+                    <div class="progress" style="height: 4px;">
+                        <div class="progress-bar bg-info" role="progressbar" style="width: 99%;" aria-valuenow="25"
+                             aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="card-title"><h4>Q9.</h4></p>
+                    <p class="card-text">싸운 뒤, 애인은 어떻게 화해하려고 할까?</p>
+                    <div class="input-group mb-3">
+                        <p>
+                            <button onclick="q9(0)" class="btn btn-outline-dark">진심이 담긴 편지를 써서 준다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q9(1)" class="btn btn-outline-dark">소소한 깜짝 이벤트를 해준다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q9(2)" class="btn btn-outline-dark">집 앞으로 찾아와 진지한 대화를 시도한다.</button>
+                        </p>
+                        <p>
+                            <button onclick="q9(3)" class="btn btn-outline-dark">처음 만났던 장소에 데려가 장난스럽게 분위기를 푼다.
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="r0" div class="card card-custom bg-white border-white border-0">
+            <div class="card-custom-img"
+                 style="background-image: url(../static/Notebook.png);"></div>
+            <div class="card-custom-avatar">
+                <img class="img-fluid"
+                     src="http://forevertwentysomethings.com/wp-content/uploads/2014/06/The-Notebook-Noah.jpg"
+                     alt="Avatar"/>
+            </div>
+            <div class="card-body" style="overflow-y: auto">
+                <h7 class="card-title">당신에게 어울리는 짝은<br></h7>
+                <h3 class="card-title">일편단심 사랑꾼, '노아'<br></h3>
+                <h6 class="card-title">-노트북 The Notebook(2004)<br></h6>
+                <p class="card-text">로맨티스트 '노아'는 지고지순한 연애 상대입니다.<br> 10대때부터 당신에게 빠져 매일
+                    연애편지를 쓸 만큼 당신밖에 모르는 사람이죠.<br> 섬세하고 낭만적인 순정파가 당신과 천생연분이네요. </p>
+            </div>
+            <div class="card-footer" style="background: inherit; border-color: inherit;">
+                <button onclick="back()" class="btn btn-info">처음으로</button>
+                <a href="https://movie.naver.com/movie/bi/mi/basic.nhn?code=38899" class="btn btn-outline-info">영화정보
+                    보러가기</a>
+            </div>
+        </div>
+
+        <div id="r1" div class="card card-custom bg-white border-white border-0">
+            <div class="card-custom-img"
+                 style="background-image: url(../static/about-time.jpg);"></div>
+            <div class="card-custom-avatar">
+                <img class="img-fluid"
+                     src="https://i.redd.it/t0ihrmwqykb31.jpg"
+                     alt="Avatar"/>
+            </div>
+            <div class="card-body" style="overflow-y: auto">
+                <h7 class="card-title">당신에게 어울리는 짝은<br></h7>
+                <h3 class="card-title">사랑스러운 조력자, '메리'<br></h3>
+                <h6 class="card-title">-어바웃타임 About Time(2013)<br></h6>
+                <p class="card-text">온화한 '메리'는 웃는 모습이 매력적인 사람입니다.<br> 늘 밝은 표정으로
+                    당신이 힘들 때, 옆에서 의지가 되어주죠.<br>
+                    구김살 없는 모습으로 당신에게 용기를 북돋는 사람과 잘 맞는군요! </p>
+            </div>
+            <div class="card-footer" style="background: inherit; border-color: inherit;">
+                <button onclick="back()" class="btn btn-info">처음으로</button>
+                <a href="https://movie.naver.com/movie/bi/mi/basic.nhn?code=92075" class="btn btn-outline-info">영화정보
+                    보러가기</a>
+            </div>
+        </div>
+
+        <div id="r2" div class="card card-custom bg-white border-white border-0">
+            <div class="card-custom-img"
+                 style="background-image: url(../static/diary.jpg);"></div>
+            <div class="card-custom-avatar">
+                <img class="img-fluid"
+                     src="https://i.guim.co.uk/img/static/sys-images/Guardian/Pix/pictures/2013/9/29/1380460247745/Colin-Firth-as-Mark-Darcy-010.jpg?width=605&quality=45&auto=format&fit=max&dpr=2&s=ac20fa78e0d82e6304867c9d90a884ed"
+                     alt="Avatar"/>
+            </div>
+            <div class="card-body" style="overflow-y: auto">
+                <h7 class="card-title">당신에게 어울리는 짝은<br></h7>
+                <h3 class="card-title">듬직한 츤데레, '마크'<br></h3>
+                <h6 class="card-title">-브리짓존슨의 일기 Bridget Jones's Diary(2001)<br></h6>
+                <p class="card-text">점잖은 '마크'는 사회에서 인정받는 능력자입니다.<br> 조금은
+                    무뚝뚝한 말투 때문에 오해받기도 하지만,<br> 알고 보면 다정다감한 성격이죠.<br>
+                    아는 것이 많아 당신에게 이것저것 알려주는 정보통이기도 하네요.</p>
+            </div>
+            <div class="card-footer" style="background: inherit; border-color: inherit;">
+                <button onclick="back()" class="btn btn-info">처음으로</button>
+                <a href="https://movie.naver.com/movie/bi/mi/basic.nhn?code=31565" class="btn btn-outline-info">영화정보
+                    보러가기</a>
+            </div>
+        </div>
+
+        <div id="r3" div class="card card-custom bg-white border-white border-0">
+            <div class="card-custom-img"
+                 style="background-image: url(../static/eternal.jpg);"></div>
+            <div class="card-custom-avatar">
+                <img class="img-fluid"
+                     src="https://www2.pictures.zimbio.com/mp/gPBNX2e_oT8l.jpg"
+                     alt="Avatar"/>
+            </div>
+            <div class="card-body" style="overflow-y: auto">
+                <h7 class="card-title">당신에게 어울리는 짝은<br></h7>
+                <h3 class="card-title">자유로운 영혼, '클레멘타인'<br></h3>
+                <h6 class="card-title">-이터널 선샤인 Eternal Sunshine Of The Spotless Mind(2004)<br></h6>
+                <p class="card-text">남의 시선을 신경 쓰지 않는 '클레멘타인'은 개성이 강한 사람입니다.<br>
+                    감성적이고 예술적인 성격의 소유자이기 때문에 지루할 틈이 없죠.<br>
+                    장난기도 많아 당신과 유머 코드가 잘 맞네요.</p>
+            </div>
+            <div class="card-footer" style="background: inherit; border-color: inherit;">
+                <button onclick="back()" class="btn btn-info">처음으로</button>
+                <a href="https://movie.naver.com/movie/bi/mi/basic.nhn?code=38444" class="btn btn-outline-info">영화정보
+                    보러가기</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+</html>
